@@ -242,37 +242,29 @@ docker-compose up -d postgres
 
 ## Environment Variables
 
-The project uses **two separate `.env` files** for different purposes:
 
-### 1. Root `.env` File (Docker Compose Substitution)
+### 1. Shared  `docker/.env` File (Docker Compose Substitution)
 
-Located at the project root (`.env`), this file contains variables used for **variable substitution** in `docker-compose.yml`:
+The webroot's default settings reside in `docker/.env`
+To initially create `docker/.env`, copy the `docker/.env.example` file.
 
-```bash
-# Environment variables for Docker Compose
-# These are used for variable substitution in docker-compose.yml
+The .env file contains variables used for **variable substitution** in `docker-compose.yml`:
 
-# PostgreSQL credentials (used for POSTGRES_USER and POSTGRES_PASSWORD)
-POSTGRES_DEFAULT_USER=postgres
-POSTGRES_DEFAULT_PASSWORD=<safepassword>
-POSTGRES_DEFAULT_DB=postgres
-```
-
-**Important:** Docker Compose reads this file automatically for substituting `${VARIABLE_NAME}` placeholders in the docker-compose.yml file. This file is:
+**Important:** Docker Compose reads this file automatically for substituting `${VARIABLE_NAME}` placeholders in the docker-compose.yml file. The .env file is:
 - ✅ Already in `.gitignore` - will not be committed to version control
 - ✅ Already in `.dockerignore` - will not be included in Docker images
 
-### 2. Service-Specific `.env` File (Container Environment)
+### 2. Service-Specific `.env` Files (Container Environment)
 
-Located at `team/.env`, this file contains environment variables that are **loaded inside containers**:
+Occasionally a repo will have it's own .env settings that override the shared docker/.env
 
 ```yaml
 # In docker-compose.yml
 env_file:
-  - ./team/.env
+  - ./chat/.env
 ```
 
-This file contains application-specific configuration like database connection strings, API keys, and service settings.
+Those repo .env files contain application-specific configuration like extra database connection strings, API keys, and service settings - but ideally settings used by multiple repos reside in the docker/.env file.
 
 ### Variable Substitution vs Container Environment
 
@@ -280,33 +272,10 @@ This file contains application-specific configuration like database connection s
 - **Variable substitution** (`${VAR}` in docker-compose.yml): Uses root `.env` or host environment
 - **Container environment** (`env_file` directive): Makes variables available inside the running container
 
-Example in docker-compose.yml:
-```yaml
-postgres:
-  environment:
-    # These ${} variables are substituted from ROOT .env
-    POSTGRES_USER: ${POSTGRES_DEFAULT_USER}
-    POSTGRES_PASSWORD: ${POSTGRES_DEFAULT_PASSWORD}
-  env_file:
-    # This file's variables are available INSIDE the container
-    - ./team/.env
-```
 
-### Setting Up Environment Variables
-
-1. **First time setup**: Copy the root `.env.example` (if exists) or create `.env` at project root:
+**Service configuration**: Copy and configure `team/.env`:
    ```bash
-   # Create root .env file
-   cat > .env << 'EOF'
-   POSTGRES_DEFAULT_USER=postgres
-   POSTGRES_DEFAULT_PASSWORD=YourSecurePasswordHere
-   POSTGRES_DEFAULT_DB=postgres
-   EOF
-   ```
-
-2. **Service configuration**: Copy and configure `team/.env`:
-   ```bash
-   cp team/.env.example team/.env
+   cp chat/.env.example chat/.env
    # Edit team/.env with your configuration
    ```
 
