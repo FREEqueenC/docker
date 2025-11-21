@@ -18,16 +18,7 @@ This directory contains Docker-related configuration files for the webroot proje
 
 ## Quick Start
 
-**Prerequisites:** Create a `.env` file at the project root (required for PostgreSQL credentials):
-
-```bash
-# Create .env file with PostgreSQL credentials
-cat > .env << 'EOF'
-POSTGRES_DEFAULT_USER=postgres
-POSTGRES_DEFAULT_PASSWORD=<safepassword>
-POSTGRES_DEFAULT_DB=postgres
-EOF
-```
+**Prerequisites:** Create a `.env` file in the docker folder from a copy of .example.env
 
 Then start the services:
 
