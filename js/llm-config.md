@@ -15,6 +15,11 @@ To add a new LLM provider (e.g., Anthropic Claude API, Cohere, etc.), simply add
   "cacheKey": "anthropicInsightsCache",
   "defaultModel": "claude-3-5-sonnet-20241022",
   "requiresApiKey": "ANTHROPIC_API_KEY",
+  "keyInfo": {
+    "description": "Your API key will be stored in your browser cache.",
+    "link": "https://console.anthropic.com/settings/keys",
+    "placeholder": "sk-ant-..."
+  },
   "apiConfig": {
     "endpoint": "https://api.anthropic.com/v1/messages",
     "method": "POST",
@@ -69,8 +74,11 @@ To add a new LLM provider (e.g., Anthropic Claude API, Cohere, etc.), simply add
 
 ### Optional Fields
 
-- **usesCliInstead**: Set to `true` if using CLI tool instead of API (e.g., Claude Code CLI)
 - **requiresApiKey**: Environment variable name for the API key
+- **keyInfo**: Object containing API key input UI information
+  - **description**: Text shown to user about where the key is stored
+  - **link**: URL to get the API key
+  - **placeholder**: Placeholder text for the API key input field
 - **topK**, **topP**: Additional model parameters (provider-specific)
 
 ## Request/Response Formats
