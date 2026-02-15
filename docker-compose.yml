@@ -25,8 +25,8 @@ services:
       - "5433:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - ./docker/postgres/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
-      - ./team/admin/sql:/docker-entrypoint-initdb.d/sql
+      - ./postgres/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
+      - ../team/admin/sql:/docker-entrypoint-initdb.d/sql
     networks:
       - webroot-network
     restart: unless-stopped
@@ -38,12 +38,12 @@ services:
 
   api:
     build:
-      context: ./team
+      context: ../team
       dockerfile: Dockerfile
     container_name: webroot-api
     working_dir: /app/team
     volumes:
-      - ./team:/app/team
+      - ../team:/app/team
       - cargo-cache:/usr/local/cargo/registry
       - cargo-git:/usr/local/cargo/git
       - target-cache:/app/team/target
@@ -53,7 +53,7 @@ services:
       - RUST_LOG=info
       - PORT=8081
     env_file:
-      - ./team/.env
+      - ../team/.env
     depends_on:
       - postgres
     networks:
@@ -62,19 +62,19 @@ services:
 
   cloud-run:
     build:
-      context: ./cloud/run
+      context: ../cloud/run
       dockerfile: Dockerfile
     container_name: webroot-cloud-run
     working_dir: /app/cloud_run
     volumes:
-      - ./cloud/run:/app/cloud_run
+      - ../cloud/run:/app/cloud_run
     ports:
       - "8100:8100"
     environment:
       - PORT=8100
       - FLASK_ENV=development
     env_file:
-      - ./cloud/run/.env
+      - ../cloud/run/.env
     networks:
       - webroot-network
     restart: unless-stopped
